@@ -14,8 +14,6 @@ export default function LoginPage() {
   async function handleSubmit(e) {
     e.preventDefault();
     setLoading(true);
-
-    // Clear any existing session before login
     await signOut({ redirect: false });
 
     const res = await signIn("credentials", {
@@ -27,11 +25,10 @@ export default function LoginPage() {
     setLoading(false);
 
     if (res?.error) {
-      // Display a more specific error
-      const errorMessage = res.error === 'CredentialSignin'
-        ? 'Login failed: Invalid credentials or server error.'
-        : `Login failed: ${res.error}`;
-
+      const errorMessage =
+        res.error === "CredentialSignin"
+          ? "Login failed: Invalid credentials or server error."
+          : `Login failed: ${res.error}`;
       alert(errorMessage);
     } else {
       router.push("/profile");
@@ -39,15 +36,17 @@ export default function LoginPage() {
   }
 
   const handleGoogleSignIn = () => {
-    signIn("google", { callbackUrl: "/profile" });
-  }
+    signIn("google", {
+      callbackUrl: "/profile",
+      prompt: "select_account",
+    });
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <form
         onSubmit={handleSubmit}
-        // INCREASED main spacing to space-y-6 to separate buttons from fields
-        className="bg-white p-8 rounded-2xl shadow-lg w-full max-w-md space-y-6" 
+        className="bg-white p-8 rounded-2xl shadow-lg w-full max-w-md space-y-6"
       >
         <h1 className="text-2xl font-bold text-center text-black">Login</h1>
 
@@ -57,7 +56,7 @@ export default function LoginPage() {
           onChange={(e) => setEmail(e.target.value)}
           placeholder="Email"
           required
-          className="text-black w-full px-4 py-2 border rounded-lg focus:ring-black focus:border-black" 
+          className="text-black w-full px-4 py-2 border rounded-lg focus:ring-black focus:border-black"
         />
 
         <input
@@ -69,7 +68,6 @@ export default function LoginPage() {
           className="text-black w-full px-4 py-2 border rounded-lg focus:ring-black focus:border-black"
         />
 
-        {/* Primary Black Button */}
         <button
           type="submit"
           className="w-full bg-black hover:bg-gray-800 text-white py-2 rounded-lg font-semibold transition"
@@ -77,12 +75,11 @@ export default function LoginPage() {
         >
           {loading ? "Logging in..." : "Login"}
         </button>
-        
-        {/* Google Button - REMOVED the specific mt-3 margin to make it closer to Login */}
+
         <button
           type="button"
           onClick={handleGoogleSignIn}
-          className="w-full bg-red-500 hover:bg-red-600 text-white py-2 rounded-lg font-semibold transition" 
+          className="w-full bg-red-500 hover:bg-red-600 text-white py-2 rounded-lg font-semibold transition"
         >
           Sign in with Google
         </button>
@@ -91,12 +88,11 @@ export default function LoginPage() {
           Don't have an account?{" "}
           <Link
             href="/register"
-            className="text-black hover:text-gray-700 hover:underline font-semibold" 
+            className="text-black hover:text-gray-700 hover:underline font-semibold"
           >
             Sign Up
           </Link>
         </p>
-
       </form>
     </div>
   );
