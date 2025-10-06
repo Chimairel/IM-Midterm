@@ -14,6 +14,8 @@ export default function LoginPage() {
   async function handleSubmit(e) {
     e.preventDefault();
     setLoading(true);
+
+    // Clear any existing session before login
     await signOut({ redirect: false });
 
     const res = await signIn("credentials", {
@@ -29,13 +31,15 @@ export default function LoginPage() {
         res.error === "CredentialSignin"
           ? "Login failed: Invalid credentials or server error."
           : `Login failed: ${res.error}`;
-      alert(errorMessage);
+
+      alert(errorMessage); // Note: Using a custom modal is recommended over alert()
     } else {
       router.push("/profile");
     }
   }
 
   const handleGoogleSignIn = () => {
+    // Added 'prompt: "select_account"' to force Google to show account selection screen
     signIn("google", {
       callbackUrl: "/profile",
       prompt: "select_account",
@@ -68,6 +72,7 @@ export default function LoginPage() {
           className="text-black w-full px-4 py-2 border rounded-lg focus:ring-black focus:border-black"
         />
 
+        {/* Primary Login Button */}
         <button
           type="submit"
           className="w-full bg-black hover:bg-gray-800 text-white py-2 rounded-lg font-semibold transition"
@@ -76,6 +81,7 @@ export default function LoginPage() {
           {loading ? "Logging in..." : "Login"}
         </button>
 
+        {/* Google Sign-In Button */}
         <button
           type="button"
           onClick={handleGoogleSignIn}
@@ -85,7 +91,7 @@ export default function LoginPage() {
         </button>
 
         <p className="text-center text-sm text-gray-500 mt-2">
-          Don't have an account?{" "}
+          Don’t have an account?{" "}
           <Link
             href="/register"
             className="text-black hover:text-gray-700 hover:underline font-semibold"
